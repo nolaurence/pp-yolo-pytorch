@@ -18,11 +18,11 @@ from __future__ import print_function
 
 import sys
 
-import paddle.fluid as fluid
+import torch
 
 import logging
 import six
-import paddle.version as fluid_version
+import torch.version as torch_version
 logger = logging.getLogger(__name__)
 
 __all__ = [
@@ -45,28 +45,29 @@ def check_gpu(use_gpu):
           "model on CPU"
 
     try:
-        if use_gpu and not fluid.is_compiled_with_cuda():
+        if use_gpu and not torch.cuda.is_available():
             logger.error(err)
             sys.exit(1)
     except Exception as e:
         pass
 
 
-def check_version(version='1.7.0'):
+def check_version(version='1.6.0'):
     """
-    Log error and exit when the installed version of paddlepaddle is
+    Log error and exit when the installed version of pytorch is
     not satisfied.
     """
     err = "PaddlePaddle version {} or higher is required, " \
           "or a suitable develop version is satisfied as well. \n" \
           "Please make sure the version is good with your code.".format(version)
 
-    version_installed = [
-        fluid_version.major, fluid_version.minor, fluid_version.patch,
-        fluid_version.rc
-    ]
-    if version_installed == ['0', '0', '0', '0']:
-        return
+    version_installed = torch_version.__version__
+    # if version_installed == ['0', '0', '0', '0']:
+    #     return
+    version_installed = version_installed.split('+')
+    version_installed = version_installed[0]
+    version_installed = version_installed.split('.')
+
     version_split = version.split('.')
 
     length = min(len(version_installed), len(version_split))
