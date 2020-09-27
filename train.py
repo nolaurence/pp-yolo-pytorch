@@ -20,7 +20,11 @@ from torch import optim  # ExponentialMovingAverage
 
 from torch.cuda.amp import autocast, GradScaler  # mixed precision
 from model.core.workspace import load_config, merge_config, create  # don't know about the function of create function
+# from ppdet.data.reader import create_reader
+
 from model.utils.cli import ArgsParser
+from model.utils.check import check_gpu, check_version, check_config
+# import model.utils.checkpoint as checkpoint
 # Training Statsz
 
 import logging
@@ -52,7 +56,11 @@ def main():
     cfg = load_config(FLAGS.config)
     merge_config(FLAGS.opt)  # "opt" 's help text: set configuration options
                              # more information needs to be added
-    check
+    check_config(cfg)
+    check_gpu(cfg.use_gpu)  # check if set use_gpu=True in torch cpu version
+    check_version()
+
+    save_only = getattr(cfg)
 
 
 if __name__ == '__main__':

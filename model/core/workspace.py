@@ -84,6 +84,7 @@ def load_config(file_path):
     cfg = AttrDict()
     with open(file_path) as f:
         cfg = merge_config(yaml.load(f, Loader=yaml.Loader), cfg)
+    print('fine!')
 
     if READER_KEY in cfg:
         reader_cfg = cfg[READER_KEY]
@@ -95,6 +96,7 @@ def load_config(file_path):
         with open(reader_cfg) as f:
             merge_config(yaml.load(f, Loader=yaml.Loader))
         del cfg[READER_KEY]
+    print('Fine!!!!!!')
 
     merge_config(cfg)
 
